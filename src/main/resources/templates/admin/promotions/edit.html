@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layouts/main :: layout(~{::main})}">
+<body>
+<main class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Cập nhật chương trình khuyến mãi</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/promotions/edit/{id}(id=${promotion.id})}" th:object="${promotion}" method="post">
+
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tiêu đề <span class="text-danger">*</span></label>
+                            <input type="text" th:field="*{title}" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thời gian bắt đầu <span class="text-danger">*</span></label>
+                                <input type="date" th:field="*{startDate}" class="form-control" th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thời gian kết thúc <span class="text-danger">*</span></label>
+                                <input type="date" th:field="*{endDate}" class="form-control" th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mức giảm giá (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" th:field="*{discountRate}" class="form-control" th:classappend="${#fields.hasErrors('discountRate')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('discountRate')}" th:errors="*{discountRate}"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Chi tiết <span class="text-danger">*</span></label>
+                            <textarea th:field="*{detail}" class="form-control" rows="3" th:classappend="${#fields.hasErrors('detail')} ? 'is-invalid' : ''"></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/admin/promotions}" class="btn btn-secondary">Quay lại</a>
+                            <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

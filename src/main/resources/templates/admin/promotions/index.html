@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layouts/main :: layout(~{::main})}">
+<body>
+<main class="container-fluid px-4">
+    <h2 class="mt-4 mb-4">Danh sách khuyến mãi</h2>
+
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/admin/promotions/search}" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Mức giảm giá</label>
+                    <input type="number" name="discount" class="form-control" placeholder="Nhập mức giá...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Từ ngày</label>
+                    <input type="date" name="start" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Đến ngày</label>
+                    <input type="date" name="end" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm kiếm</button>
+                    <a th:href="@{/admin/promotions}" class="btn btn-secondary">Khôi phục</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <a th:href="@{/admin/promotions/create}" class="btn btn-success"><i class="fas fa-plus"></i> Thêm khuyến mãi</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body table-responsive">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Thời gian bắt đầu</th>
+                    <th>Thời gian kết thúc</th>
+                    <th>Mức giảm giá</th>
+                    <th>Chi Tiết</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${promotions}">
+                    <td th:text="${p.title}"></td>
+                    <td th:text="${p.startDate}"></td>
+                    <td th:text="${p.endDate}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.discountRate, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                    <td th:text="${p.detail}"></td>
+                    <td>
+                        <a th:href="@{/admin/promotions/edit/{id}(id=${p.id})}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Sửa
+                        </a>
+
+                        <button class="btn btn-danger btn-sm"
+                                th:data-id="${p.id}"
+                                th:data-title="${p.title}"
+                                onclick="confirmDelete(this.getAttribute('data-id'), this.getAttribute('data-title'))">
+                            <i class="fas fa-trash"></i> Xóa
+                        </button>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(promotions)}">
+                    <td colspan="6" class="text-center">Không tìm thấy chương trình khuyến mãi nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form th:action="@{/admin/promotions/delete}" method="post">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Xác nhận xóa</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="deleteId">
+                        <p class="mb-0">Bạn có muốn xóa Chương trình khuyến mãi <strong id="deleteTitle" class="text-danger"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete(id, title) {
+            document.getElementById('deleteId').value = id;
+            document.getElementById('deleteTitle').innerText = title;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+</main>
+</body>
+</html>
